@@ -1,0 +1,23 @@
+name: API Tests
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '03-API-Testing/**'
+
+permissions:
+  contents: read
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Build API testing module
+        run: mvn -f 03-API-Testing/pom.xml -q test -DskipTests

@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="AOS-Web-Automation-Suite">
+    <test name="Smoke">
+        <packages>
+            <package name="com.aos.web.tests"/>
+        </packages>
+    </test>
+</suite>

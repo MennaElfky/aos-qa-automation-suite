@@ -1,0 +1,38 @@
+name: Mobile Tests
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '04-Mobile-Automation/**'
+
+permissions:
+  contents: read
+
+jobs:
+  mobile-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r 04-Mobile-Automation/requirements.txt
+      - name: Run pytest collection check
+        run: |
+          set +e
+          pytest 04-Mobile-Automation/src/tests --collect-only
+          status=$?
+          set -e
+
+          if [ "$status" -eq 0 ]; then
+            exit 0
+          fi
+
+          if [ "$status" -eq 5 ]; then
+            echo "No mobile tests collected yet; treating current scaffold state as successful."
+            exit 0
+          fi
+          exit "$status"

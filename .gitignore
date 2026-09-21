@@ -1,0 +1,34 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Build & Dependencies
+target/
+build/
+node_modules/
+__pycache__/
+*.class
+venv/
+
+# Reports & Screenshots
+allure-results/
+allure-report/
+extent-reports/
+reports/
+screenshots/
+logs/
+
+# Mobile Artifacts
+*.apk
+*.aab
+!app/.gitkeep
+
+# Environment & Secrets
+.env
+config/*secret*
+postman/environments/*private*

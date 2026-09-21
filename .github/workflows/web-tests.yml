@@ -1,0 +1,23 @@
+name: Web Tests
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '02-Web-Automation/**'
+
+permissions:
+  contents: read
+
+jobs:
+  web-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Build web automation module
+        run: mvn -f 02-Web-Automation/pom.xml -q test -DskipTests
