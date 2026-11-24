@@ -1,4 +1,4 @@
-package com.aos.web.tests.feature;
+package com.aos.web.tests.integration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
