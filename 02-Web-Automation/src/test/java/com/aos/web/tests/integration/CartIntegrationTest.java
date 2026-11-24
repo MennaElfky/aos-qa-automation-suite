@@ -267,268 +267,274 @@ public class CartIntegrationTest {
         );
     }
 
-    @Test(priority = 3)
-    public void testCase3() throws InterruptedException {
-        addProductToCart(17, 1);
+   @Test(priority = 3)
+public void testCase3() throws InterruptedException {
+    addProductToCart(17, 1);
 
-        driver.navigate().to(
-                "https://www.advantageonlineshopping.com/#/shoppingCart"
-        );
+    driver.navigate().to(
+            "https://www.advantageonlineshopping.com/#/shoppingCart"
+    );
 
-        waitForLoader();
+    waitForLoader();
 
-        WebElement productRow = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        By.cssSelector(
-                                "#shoppingCart table tbody tr:first-child"
-                        )
-                )
-        );
+    WebElement productRow = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                    By.cssSelector(
+                            "#shoppingCart table tbody tr:first-child"
+                    )
+            )
+    );
 
-        int rowsBeforeEdit = driver.findElements(
-                By.cssSelector("#shoppingCart table tbody tr")
-        ).size();
+    int rowsBeforeEdit = driver.findElements(
+            By.cssSelector("#shoppingCart table tbody tr")
+    ).size();
 
-        String productName = productRow.findElement(
-                By.cssSelector("label.productName")
-        ).getText().trim();
+    String productName = productRow.findElement(
+            By.cssSelector("label.productName")
+    ).getText().trim();
 
-        int originalQuantity = Integer.parseInt(
-                productRow.findElement(
-                        By.cssSelector(
-                                "td.quantityMobile > label.ng-binding"
-                        )
-                ).getText().trim()
-        );
+    int originalQuantity = Integer.parseInt(
+            productRow.findElement(
+                    By.cssSelector(
+                            "td.quantityMobile > label.ng-binding"
+                    )
+            ).getText().trim()
+    );
 
-        WebElement editLink = productRow.findElement(
-                By.cssSelector("a.edit[href*='pageState=edit']")
-        );
+    WebElement editLink = productRow.findElement(
+            By.cssSelector("a.edit[href*='pageState=edit']")
+    );
 
-        editLink.click();
+    editLink.click();
 
-        wait.until(
-                ExpectedConditions.urlContains("pageState=edit")
-        );
+    wait.until(
+            ExpectedConditions.urlContains("pageState=edit")
+    );
 
-        waitForLoader();
+    waitForLoader();
 
-        WebElement quantityInput = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        By.cssSelector(
-                                "#productProperties input[name='quantity']"
-                        )
-                )
-        );
-
-        String originalInputValue = quantityInput.getAttribute("value");
-
-        Assert.assertNotNull(
-                originalInputValue,
-                "The quantity input should have a value."
-        );
-
-        Assert.assertEquals(
-                Integer.parseInt(originalInputValue.trim()),
-                originalQuantity,
-                "The edit page should display the current cart quantity."
-        );
-
-        WebElement plusButton = wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        By.cssSelector(
-                                "#productProperties .e-sec-plus-minus .plus"
-                        )
-                )
-        );
-
-        plusButton.click();
-
-        int expectedQuantity = originalQuantity + 1;
-
-        wait.until(currentDriver -> {
-            String value = currentDriver.findElement(
+    WebElement quantityInput = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
                     By.cssSelector(
                             "#productProperties input[name='quantity']"
                     )
-            ).getAttribute("value");
+            )
+    );
 
-            return value != null
-                    && value.trim().equals(
-                    String.valueOf(expectedQuantity)
-            );
-        });
+    String originalInputValue = quantityInput.getAttribute("value");
 
-        WebElement addToCartButton = wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        By.cssSelector(
-                                "#productProperties button[name='save_to_cart']"
-                        )
+    Assert.assertNotNull(
+            originalInputValue,
+            "The quantity input should have a value."
+    );
+
+    Assert.assertEquals(
+            Integer.parseInt(originalInputValue.trim()),
+            originalQuantity,
+            "The edit page should display the current cart quantity."
+    );
+
+    WebElement plusButton = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                    By.cssSelector(
+                            "#productProperties .e-sec-plus-minus .plus"
+                    )
+            )
+    );
+
+    plusButton.click();
+
+    int expectedQuantity = originalQuantity + 1;
+
+    wait.until(currentDriver -> {
+        String value = currentDriver.findElement(
+                By.cssSelector(
+                        "#productProperties input[name='quantity']"
                 )
+        ).getAttribute("value");
+
+        return value != null
+                && value.trim().equals(
+                String.valueOf(expectedQuantity)
         );
+    });
 
-        scrollToElement(addToCartButton);
-        waitForLoader();
-        addToCartButton.click();
+    WebElement addToCartButton = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                    By.cssSelector(
+                            "#productProperties button[name='save_to_cart']"
+                    )
+            )
+    );
 
-        wait.until(currentDriver -> {
-            List<WebElement> cartCounters =
-                    currentDriver.findElements(
-                            By.cssSelector(
-                                    "#shoppingCartLink span.cart"
-                            )
-                    );
+    scrollToElement(addToCartButton);
+    waitForLoader();
+    addToCartButton.click();
 
-            if (cartCounters.isEmpty()) {
-                return false;
-            }
-
-            return cartCounters.get(0)
-                    .getText()
-                    .trim()
-                    .equals(String.valueOf(expectedQuantity));
-        });
-
-        openMiniCart();
-
-        WebElement miniCartRow = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
+    wait.until(currentDriver -> {
+        List<WebElement> cartCounters =
+                currentDriver.findElements(
                         By.cssSelector(
-                                "ul.desktop-handler " +
-                                        "#shoppingCartLink ~ ul " +
-                                        "tool-tip-cart tbody tr:first-child"
+                                "#shoppingCartLink span.cart"
                         )
-                )
-        );
+                );
 
-        String miniCartProductName = miniCartRow.findElement(
+        if (cartCounters.isEmpty()) {
+            return false;
+        }
+
+        return cartCounters.get(0)
+                .getText()
+                .trim()
+                .equals(String.valueOf(expectedQuantity));
+    });
+
+    openMiniCart();
+
+    WebElement miniCartRow = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                    By.cssSelector(
+                            "ul.desktop-handler " +
+                                    "#shoppingCartLink ~ ul " +
+                                    "tool-tip-cart tbody tr:first-child"
+                    )
+            )
+    );
+
+    String miniCartProductName = wait.until(currentDriver -> {
+        String currentProductName = miniCartRow.findElement(
                 By.cssSelector("td:nth-child(2) h3")
         ).getText().trim();
 
-        WebElement miniCartQuantityElement = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath(
-                                "//ul[contains(@class,'desktop-handler')]" +
-                                        "//tool-tip-cart" +
-                                        "//tbody/tr[1]" +
-                                        "//td[2]//label[contains(normalize-space(.),'QTY:')]"
-                        )
-                )
-        );
+        return currentProductName.isEmpty()
+                ? null
+                : currentProductName;
+    });
 
-        wait.until(currentDriver ->
-                !miniCartQuantityElement.getText().trim().isEmpty()
-        );
+    WebElement miniCartQuantityElement = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath(
+                            "//ul[contains(@class,'desktop-handler')]" +
+                                    "//tool-tip-cart" +
+                                    "//tbody/tr[1]" +
+                                    "//td[2]//label[contains(normalize-space(.),'QTY:')]"
+                    )
+            )
+    );
 
-        String miniCartQuantity = miniCartQuantityElement
-                .getText()
-                .replace("QTY:", "")
-                .trim();
+    wait.until(currentDriver ->
+            !miniCartQuantityElement.getText().trim().isEmpty()
+    );
 
-        Assert.assertEquals(
-                miniCartProductName,
-                productName,
-                "The Mini-Cart should display the edited product."
-        );
+    String miniCartQuantity = miniCartQuantityElement
+            .getText()
+            .replace("QTY:", "")
+            .trim();
 
-        Assert.assertEquals(
-                miniCartQuantity,
-                String.valueOf(expectedQuantity),
-                "The Mini-Cart should display the updated quantity."
-        );
+    Assert.assertEquals(
+            miniCartProductName,
+            productName,
+            "The Mini-Cart should display the edited product."
+    );
 
-        WebElement miniCartTotalElement = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        By.cssSelector(
-                                "ul.desktop-handler " +
-                                        "#shoppingCartLink ~ ul " +
-                                        "tool-tip-cart span.cart-total"
-                        )
-                )
-        );
+    Assert.assertEquals(
+            miniCartQuantity,
+            String.valueOf(expectedQuantity),
+            "The Mini-Cart should display the updated quantity."
+    );
 
-        wait.until(currentDriver ->
-                !miniCartTotalElement.getText().trim().isEmpty()
-        );
+    WebElement miniCartTotalElement = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                    By.cssSelector(
+                            "ul.desktop-handler " +
+                                    "#shoppingCartLink ~ ul " +
+                                    "tool-tip-cart span.cart-total"
+                    )
+            )
+    );
 
-        String miniCartTotal =
-                miniCartTotalElement.getText().trim();
+    wait.until(currentDriver ->
+            !miniCartTotalElement.getText().trim().isEmpty()
+    );
 
-        driver.navigate().to(
-                "https://www.advantageonlineshopping.com/#/shoppingCart"
-        );
+    String miniCartTotal =
+            miniCartTotalElement.getText().trim();
 
-        waitForLoader();
+    driver.navigate().to(
+            "https://www.advantageonlineshopping.com/#/shoppingCart"
+    );
 
-        List<WebElement> rowsAfterEdit = wait.until(
-                ExpectedConditions.visibilityOfAllElementsLocatedBy(
-                        By.cssSelector(
-                                "#shoppingCart table tbody tr"
-                        )
-                )
-        );
+    waitForLoader();
 
-        Assert.assertEquals(
-                rowsAfterEdit.size(),
-                rowsBeforeEdit,
-                "Editing an existing product should not create a duplicate row."
-        );
+    List<WebElement> rowsAfterEdit = wait.until(
+            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+                    By.cssSelector(
+                            "#shoppingCart table tbody tr"
+                    )
+            )
+    );
 
-        WebElement updatedProductRow = null;
-        int matchingProducts = 0;
+    Assert.assertEquals(
+            rowsAfterEdit.size(),
+            rowsBeforeEdit,
+            "Editing an existing product should not create a duplicate row."
+    );
 
-        for (WebElement row : rowsAfterEdit) {
-            String currentProductName = row.findElement(
-                    By.cssSelector("label.productName")
-            ).getText().trim();
+    WebElement updatedProductRow = null;
+    int matchingProducts = 0;
 
-            if (currentProductName.equals(productName)) {
-                updatedProductRow = row;
-                matchingProducts++;
-            }
-        }
-
-        Assert.assertEquals(
-                matchingProducts,
-                1,
-                "The edited product should appear only once in the Shopping Cart."
-        );
-
-        Assert.assertNotNull(
-                updatedProductRow,
-                "The edited product should remain in the Shopping Cart."
-        );
-
-        int shoppingCartQuantity = Integer.parseInt(
-                updatedProductRow.findElement(
-                        By.cssSelector(
-                                "td.quantityMobile > label.ng-binding"
-                        )
-                ).getText().trim()
-        );
-
-        Assert.assertEquals(
-                shoppingCartQuantity,
-                expectedQuantity,
-                "The Shopping Cart should display the updated quantity."
-        );
-
-        String shoppingCartTotal = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        By.cssSelector(
-                                "#shoppingCart table tfoot " +
-                                        "tr:first-child td:last-child " +
-                                        "span.roboto-medium"
-                        )
-                )
+    for (WebElement row : rowsAfterEdit) {
+        String currentProductName = row.findElement(
+                By.cssSelector("label.productName")
         ).getText().trim();
 
-        Assert.assertEquals(
-                shoppingCartTotal,
-                miniCartTotal,
-                "The Mini-Cart and Shopping Cart totals should match."
-        );
+        if (currentProductName.equals(productName)) {
+            updatedProductRow = row;
+            matchingProducts++;
+        }
     }
+
+    Assert.assertEquals(
+            matchingProducts,
+            1,
+            "The edited product should appear only once in the Shopping Cart."
+    );
+
+    Assert.assertNotNull(
+            updatedProductRow,
+            "The edited product should remain in the Shopping Cart."
+    );
+
+    int shoppingCartQuantity = Integer.parseInt(
+            updatedProductRow.findElement(
+                    By.cssSelector(
+                            "td.quantityMobile > label.ng-binding"
+                    )
+            ).getText().trim()
+    );
+
+    Assert.assertEquals(
+            shoppingCartQuantity,
+            expectedQuantity,
+            "The Shopping Cart should display the updated quantity."
+    );
+
+    String shoppingCartTotal = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                    By.cssSelector(
+                            "#shoppingCart table tfoot " +
+                                    "tr:first-child td:last-child " +
+                                    "span.roboto-medium"
+                    )
+            )
+    ).getText().trim();
+
+    Assert.assertEquals(
+            shoppingCartTotal,
+            miniCartTotal,
+            "The Mini-Cart and Shopping Cart totals should match."
+    );
+}
     @Test(priority = 4)
     public void testCase4() throws InterruptedException {
         addProductToCart(17, 1);
